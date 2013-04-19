@@ -253,13 +253,17 @@
                     case 0xE:
                         switch (nn) {
                             case 0x9E:
-                                if (registers[x] === currentKey) {
-                                    pc += 2;
+                                if (keyIsDown) {
+                                    if (registers[x] === currentKey) {
+                                        pc += 2;
+                                    }
                                 }
                                 break;
                             case 0xA1:
-                                if (registers[x] !== currentKey) {
-                                    pc += 2;
+                                if (keyIsDown) {
+                                    if (registers[x] !== currentKey) {
+                                        pc += 2;
+                                    }
                                 }
                                 break;
                             break;
@@ -322,9 +326,6 @@
             }
 
             window.onload = function () {
-                /*memory[0x200] = 0x00;
-                memory[0x201] = 0xE0;
-                memory[0x202] = 0x12;*/
 
                 memory[0x0 * 5 + 0] = parseInt('11110000', 2);
                 memory[0x0 * 5 + 1] = parseInt('10010000', 2);
@@ -380,6 +381,48 @@
                 memory[0x8 * 5 + 3] = parseInt('10010000', 2);
                 memory[0x8 * 5 + 4] = parseInt('11110000', 2);
 
+                memory[0x9 * 5 + 0] = parseInt('11110000', 2);
+                memory[0x9 * 5 + 1] = parseInt('10010000', 2);
+                memory[0x9 * 5 + 2] = parseInt('11110000', 2);
+                memory[0x9 * 5 + 3] = parseInt('00010000', 2);
+                memory[0x9 * 5 + 4] = parseInt('00010000', 2);
+
+                memory[0xA * 5 + 0] = parseInt('11110000', 2);
+                memory[0xA * 5 + 1] = parseInt('10010000', 2);
+                memory[0xA * 5 + 2] = parseInt('11110000', 2);
+                memory[0xA * 5 + 3] = parseInt('10010000', 2);
+                memory[0xA * 5 + 4] = parseInt('10010000', 2);
+
+                memory[0xB * 5 + 0] = parseInt('11100000', 2);
+                memory[0xB * 5 + 1] = parseInt('10010000', 2);
+                memory[0xB * 5 + 2] = parseInt('11100000', 2);
+                memory[0xB * 5 + 3] = parseInt('10010000', 2);
+                memory[0xB * 5 + 4] = parseInt('11100000', 2);
+
+                memory[0xC * 5 + 0] = parseInt('11110000', 2);
+                memory[0xC * 5 + 1] = parseInt('10000000', 2);
+                memory[0xC * 5 + 2] = parseInt('10000000', 2);
+                memory[0xC * 5 + 3] = parseInt('10000000', 2);
+                memory[0xC * 5 + 4] = parseInt('11110000', 2);
+
+                memory[0xD * 5 + 0] = parseInt('11100000', 2);
+                memory[0xD * 5 + 1] = parseInt('10010000', 2);
+                memory[0xD * 5 + 2] = parseInt('10010000', 2);
+                memory[0xD * 5 + 3] = parseInt('10010000', 2);
+                memory[0xD * 5 + 4] = parseInt('11100000', 2);
+
+                memory[0xE * 5 + 0] = parseInt('11110000', 2);
+                memory[0xE * 5 + 1] = parseInt('10000000', 2);
+                memory[0xE * 5 + 2] = parseInt('11110000', 2);
+                memory[0xE * 5 + 3] = parseInt('10000000', 2);
+                memory[0xE * 5 + 4] = parseInt('11110000', 2);
+
+                memory[0xF * 5 + 0] = parseInt('11110000', 2);
+                memory[0xF * 5 + 1] = parseInt('10000000', 2);
+                memory[0xF * 5 + 2] = parseInt('11110000', 2);
+                memory[0xF * 5 + 3] = parseInt('10000000', 2);
+                memory[0xF * 5 + 4] = parseInt('10000000', 2);
+
                 function finish() {
                     canvas = document.getElementById('canvas');
                     context = canvas.getContext('2d');
@@ -401,7 +444,7 @@
                         finish();
                     }
                 };
-                xhr.open('GET', 'BRIX');
+                xhr.open('GET', 'MAZE');
                 xhr.send();
             };
         </script>
