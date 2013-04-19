@@ -10,32 +10,12 @@ var chipate = {
             i              = 0,
             pc             = 0x200,
             stack          = [],
-            keyMap = {
-                49: 0x0,
-                50: 0x1,
-                51: 0x2,
-                52: 0x3,
-                81: 0x4,
-                87: 0x5,
-                69: 0x6,
-                82: 0x7,
-                65: 0x8,
-                83: 0x9,
-                68: 0xA,
-                70: 0xB,
-                90: 0xC,
-                88: 0xD,
-                67: 0xE,
-                86: 0xF
-            },
-            keyIsDown = false,
-            currentKey,
-            waitingForKey = undefined,
             delayTimer = 0,
             soundTimer = 0,
             running = true;
 
-        self.renderer = setupProperties['renderer'];
+        self.renderer = setupProperties['renderer'] || {'render': function () {}};
+        self.input    = setupProperties['input']    || {'currentKey': -1};
 
         setInterval(function () {
             if (delayTimer) {
@@ -49,24 +29,8 @@ var chipate = {
             }
         }, 1000/60);
 
-        document.onkeydown = function (e) {
-            keyIsDown = true;
-            currentKey = keyMap[e.which];
-            console.log('key: ' + currentKey);
-            if (waitingForKey) {
-                waitingForKey();
-                waitingForKey = undefined;
-            }
-        }
-
-        document.onkeyup = function (e) {
-            keyIsDown = false;
-        }
-
         function render() {
-            if (self.renderer) {
-                self.renderer.render(screen);
-            }
+            self.renderer.render(screen);
         }
 
         function clear() {
@@ -243,17 +207,13 @@ var chipate = {
                 case 0xE:
                     switch (nn) {
                         case 0x9E:
-                            if (keyIsDown) {
-                                if (registers[x] === currentKey) {
-                                    pc += 2;
-                                }
+                            if (registers[x] === self.input.currentKey) {
+                                pc += 2;
                             }
                             break;
                         case 0xA1:
-                            if (keyIsDown) {
-                                if (registers[x] !== currentKey) {
-                                    pc += 2;
-                                }
+                            if (registers[x] !== self.input.currentKey) {
+                                pc += 2;
                             }
                             break;
                         break;
@@ -266,9 +226,10 @@ var chipate = {
                             break;
                         case 0x0A:
                             console.log('waiting for input');
-                            waitingForKey = function () {
+                            self.input.onKeyDown = function () {
+                                self.input.onKeyDown = null;
                                 console.log('key pressed');
-                                registers[x] = currentKey;
+                                registers[x] = self.input.currentKey;
                                 running = true;
                                 setTimeout(loop, 0);
                             };
@@ -450,8 +411,50 @@ var chipate = {
             }
         }
     },
+    'KeyboardInput': function () {
+        var self = this,
+            keyMap = {
+                49: 0x0,
+                50: 0x1,
+                51: 0x2,
+                52: 0x3,
+                81: 0x4,
+                87: 0x5,
+                69: 0x6,
+                82: 0x7,
+                65: 0x8,
+                83: 0x9,
+                68: 0xA,
+                70: 0xB,
+                90: 0xC,
+                88: 0xD,
+                67: 0xE,
+                86: 0xF
+            };
+
+        self.currentKey = -1;
+        self.onKeyDown = null;
+
+        document.onkeydown = function (event) {
+            var key = event.which;
+
+            if (key in keyMap) {
+                self.currentKey = keyMap[key];
+            }
+
+            if (self.onKeyDown) {
+                self.onKeyDown();
+            }
+        }
+
+        document.onkeyup = function () {
+            self.currentKey = -1;
+        }
+            
+    },
     'quickSetup': function (canvasElement) {
         var renderer = new chipate.CanvasRenderer(canvasElement),
-            emulator = new chipate.Emulator({'renderer': renderer});
+            input    = new chipate.KeyboardInput(),
+            emulator = new chipate.Emulator({'renderer': renderer, 'input': input});
     }
 };
