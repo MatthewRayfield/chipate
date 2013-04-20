@@ -454,6 +454,178 @@ var chipate = {
         }
             
     },
+    'disassemble': function disassemble(memory) {
+        var length = memory.length,
+            i,
+            word,
+            opcode,
+            x,
+            y,
+            nnn,
+            nn,
+            n,
+            command,
+            args,
+            lines = [];
+
+        for (i = 0; i < length; i += 2) {
+            word = memory[i] << 0x8 | memory[i+1],
+            opcode = word >> 0xc,
+            x = (word & 0x0F00) >> 0x8,
+            y = (word & 0xF0) >> 0x4,
+            nnn = word & 0xFFF,
+            nn  = word & 0xFF,
+            n   = word & 0xF,
+            command ='',
+            args = [];
+
+            switch (opcode) {
+                case 0x0:
+                    switch (nn) {
+                        case 0xE0:
+                            command = 'clr';
+                            break;
+                        case 0xEE:
+                            command = 'ret';
+                            break;
+                    }
+                    break;
+                case 0x1:
+                    command = 'jmp';
+                    args.push(nnn);
+                    break;
+                case 0x2:
+                    command = 'srt';
+                    args.push(nnn);
+                    break;
+                case 0x3:
+                    command = 'sie';
+                    args.push(x, nn);
+                    break;
+                case 0x4:
+                    command = 'sne';
+                    args.push(x, nn);
+                    break;
+                case 0x5:
+                    command = 'sre';
+                    args.push(x, y);
+                    break;
+                case 0x6:
+                    command = 'set';
+                    args.push(x, nn);
+                    break;
+                case 0x7:
+                    command = 'add';
+                    args.push(x, nn);
+                    break;
+                case 0x8:
+                    switch (n) {
+                        case 0x0:
+                            command = 'str';
+                            break;
+                        case 0x1:
+                            command = 'ror';
+                            break;
+                        case 0x2:
+                            command = 'and';
+                            break;
+                        case 0x3:
+                            command = 'xor';
+                            break;
+                        case 0x4:
+                            command = 'adr';
+                            break;
+                        case 0x5:
+                            command = 'sbr';
+                            break;
+                        case 0x6:
+                            command = 'shr';
+                            break;
+                        case 0x7:
+                            command = 'sbf';
+                            break;
+                        case 0xE:
+                            command = 'shl';
+                            break;
+                    }
+                    args.push(x, y);
+                    break;
+                case 0x9:
+                    command = 'snr';
+                    args.push(x, y);
+                    break;
+                case 0xA:
+                    command = 'sti';
+                    args.push(nnn);
+                    break;
+                case 0xB:
+                    command = 'jpp';
+                    args.push(nnn);
+                    break;
+                case 0xC:
+                    command = 'rnd';
+                    args.push(x, nn);
+                    break;
+                case 0xD:
+                    command = 'drw';
+                    args.push(x, y, n);
+                    break;
+                case 0xE:
+                    switch (nn) {
+                        case 0x9E:
+                            command = 'sip';
+                            break;
+                        case 0xA1:
+                            command = 'snp';
+                            break;
+                        break;
+                    }
+                    args.push(x);
+                    break;
+                case 0xF:
+                    switch (nn) {
+                        case 0x07:
+                            command = 'stm';
+                            break;
+                        case 0x0A:
+                            command = 'wfk';
+                            break;
+                        case 0x15:
+                            command = 'sdt';
+                            break;
+                        case 0x18:
+                            command = 'sst';
+                            break;
+                        case 0x1E:
+                            command = 'adi';
+                            break;
+                        case 0x29:
+                            command = 'sts';
+                            break;
+                        case 0x33:
+                            command = 'sbd';
+                            break;
+                        case 0x55:
+                            command = 'srm';
+                            break;
+                        case 0x65:
+                            command = 'lrm';
+                            break;
+                    }
+                    args.push(x);
+                    break;
+            }
+
+            if (command) {
+                lines.push([i, command].concat(args));
+            }
+            else {
+                lines.push([i, null]);
+            }
+        }
+
+        return lines;
+    },
     'ajaxRom': function ajaxRom(path, callback) {
         var xhr       = new XMLHttpRequest(),
             romBuffer = new ArrayBuffer(0xE00),
