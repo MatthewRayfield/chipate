@@ -24,6 +24,8 @@ var chipate = {
             for (i = 0; i < length; i ++) {
                 memory[0x200 + i] = rom[i];
             }
+
+            self.initialize();
         }
 
         self.start = function start() {

@@ -1,0 +1,29 @@
+body {
+    background: #dddddd;
+    text-align: center;
+    margin: 20;
+}
+#interface-box {
+    display: inline-block;
+}
+#toolbar {
+    text-align: left;
+    padding: 5px;
+    background: #cccccc;
+    margin: 0 20px;
+}
+#toolbar h1 {
+    margin: 0;
+    font: 15px Arial;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 10px;
+}
+#toolbar h1 sup {
+    font: 10px Arial;
+}
+#canvas {
+    background: white;
+    border: 10px solid #cccccc;
+    box-shadow: 0 5px 20px 0;
+}

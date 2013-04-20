@@ -1,19 +1,39 @@
 <html>
     <head>
+        <link rel='stylesheet' type='text/css' href='interface.css' />
         <script src='chipate.js'></script>
-        <script>
-            window.onload = function () {
-                var emulator = chipate.quickSetup(document.getElementById('canvas'));
-
-                chipate.ajaxRom('roms/MAZE', function (rom) {
-                    emulator.loadRom(rom);
-                    emulator.initialize();
-                    emulator.start();
-                });
-            };
-        </script>
+        <script src='interface.js'></script>
     </head>
     <body>
-        <canvas id='canvas' width='640' height='320'></canvas>
+        <div id='interface-box'>
+            <div id='toolbar'>
+                <h1>
+                    Chipate
+                    <sup>alpha</sup>
+                </h1>
+                <select id='rom-selector'>
+                    <option value='15PUZZLE'>15PUZZLE</option>
+                    <option value='BLINKY'>BLINKY</option>
+                    <option value='BLITZ'>BLITZ</option>
+                    <option value='BRIX'>BRIX</option>
+                    <option value='CONNECT4'>CONNECT4</option>
+                    <option value='GUESS'>GUESS</option>
+                    <option value='HIDDEN'>HIDDEN</option>
+                    <option value='INVADERS'>INVADERS</option>
+                    <option value='KALEID'>KALEID</option>
+                    <option value='MAZE'>MAZE</option>
+                    <option value='MISSILE'>MISSILE</option>
+                    <option value='PONG'>PONG</option>
+                    <option value='PUZZLE'>PUZZLE</option>
+                    <option value='TANK'>TANK</option>
+                    <option value='TETRIS'>TETRIS</option>
+                    <option value='TICTAC'>TICTAC</option>
+                </select>
+                <button id='load-button'>Load</button>
+                <button id='start-button'>Start</button>
+                <button id='stop-button'>Stop</button>
+            </div>
+            <canvas id='canvas' width='640' height='320'></canvas>
+        </div>
     </body>
 </html>
