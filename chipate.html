@@ -3,7 +3,13 @@
         <script src='chipate.js'></script>
         <script>
             window.onload = function () {
-                chipate.quickSetup(document.getElementById('canvas'));
+                var emulator = chipate.quickSetup(document.getElementById('canvas'));
+
+                chipate.ajaxRom('roms/MAZE', function (rom) {
+                    emulator.loadRom(rom);
+                    emulator.initialize();
+                    emulator.start();
+                });
             };
         </script>
     </head>

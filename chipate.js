@@ -17,17 +17,133 @@ var chipate = {
         self.renderer = setupProperties['renderer'] || {'render': function () {}};
         self.input    = setupProperties['input']    || {'currentKey': -1};
 
-        setInterval(function () {
-            if (delayTimer) {
-                delayTimer --;
-            }
-        }, 1000/60);
+        self.loadRom = function loadRom(rom) {
+            var i,
+                length = rom.length;
 
-        setInterval(function () {
-            if (soundTimer) {
-                soundTimer --;
+            for (i = 0; i < length; i ++) {
+                memory[0x200 + i] = rom[i];
             }
-        }, 1000/60);
+        }
+
+        self.start = function start() {
+            running = true;
+            loop();
+        };
+
+        self.stop = function stop() {
+            running = false;
+        };
+
+        self.initialize = function initialize() {
+            memory[0x0 * 5 + 0] = parseInt('11110000', 2);
+            memory[0x0 * 5 + 1] = parseInt('10010000', 2);
+            memory[0x0 * 5 + 2] = parseInt('10010000', 2);
+            memory[0x0 * 5 + 3] = parseInt('10010000', 2);
+            memory[0x0 * 5 + 4] = parseInt('11110000', 2);
+
+            memory[0x1 * 5 + 0] = parseInt('00110000', 2);
+            memory[0x1 * 5 + 1] = parseInt('00010000', 2);
+            memory[0x1 * 5 + 2] = parseInt('00010000', 2);
+            memory[0x1 * 5 + 3] = parseInt('00010000', 2);
+            memory[0x1 * 5 + 4] = parseInt('00010000', 2);
+
+            memory[0x2 * 5 + 0] = parseInt('11110000', 2);
+            memory[0x2 * 5 + 1] = parseInt('00010000', 2);
+            memory[0x2 * 5 + 2] = parseInt('11110000', 2);
+            memory[0x2 * 5 + 3] = parseInt('10000000', 2);
+            memory[0x2 * 5 + 4] = parseInt('11110000', 2);
+
+            memory[0x3 * 5 + 0] = parseInt('11110000', 2);
+            memory[0x3 * 5 + 1] = parseInt('00010000', 2);
+            memory[0x3 * 5 + 2] = parseInt('11110000', 2);
+            memory[0x3 * 5 + 3] = parseInt('00010000', 2);
+            memory[0x3 * 5 + 4] = parseInt('11110000', 2);
+
+            memory[0x4 * 5 + 0] = parseInt('10010000', 2);
+            memory[0x4 * 5 + 1] = parseInt('10010000', 2);
+            memory[0x4 * 5 + 2] = parseInt('11110000', 2);
+            memory[0x4 * 5 + 3] = parseInt('00010000', 2);
+            memory[0x4 * 5 + 4] = parseInt('00010000', 2);
+
+            memory[0x5 * 5 + 0] = parseInt('11110000', 2);
+            memory[0x5 * 5 + 1] = parseInt('10000000', 2);
+            memory[0x5 * 5 + 2] = parseInt('11110000', 2);
+            memory[0x5 * 5 + 3] = parseInt('00010000', 2);
+            memory[0x5 * 5 + 4] = parseInt('11110000', 2);
+
+            memory[0x6 * 5 + 0] = parseInt('11110000', 2);
+            memory[0x6 * 5 + 1] = parseInt('10000000', 2);
+            memory[0x6 * 5 + 2] = parseInt('11110000', 2);
+            memory[0x6 * 5 + 3] = parseInt('10010000', 2);
+            memory[0x6 * 5 + 4] = parseInt('11110000', 2);
+
+            memory[0x7 * 5 + 0] = parseInt('11110000', 2);
+            memory[0x7 * 5 + 1] = parseInt('00010000', 2);
+            memory[0x7 * 5 + 2] = parseInt('00010000', 2);
+            memory[0x7 * 5 + 3] = parseInt('00010000', 2);
+            memory[0x7 * 5 + 4] = parseInt('00010000', 2);
+
+            memory[0x8 * 5 + 0] = parseInt('11110000', 2);
+            memory[0x8 * 5 + 1] = parseInt('10010000', 2);
+            memory[0x8 * 5 + 2] = parseInt('11110000', 2);
+            memory[0x8 * 5 + 3] = parseInt('10010000', 2);
+            memory[0x8 * 5 + 4] = parseInt('11110000', 2);
+
+            memory[0x9 * 5 + 0] = parseInt('11110000', 2);
+            memory[0x9 * 5 + 1] = parseInt('10010000', 2);
+            memory[0x9 * 5 + 2] = parseInt('11110000', 2);
+            memory[0x9 * 5 + 3] = parseInt('00010000', 2);
+            memory[0x9 * 5 + 4] = parseInt('00010000', 2);
+
+            memory[0xA * 5 + 0] = parseInt('11110000', 2);
+            memory[0xA * 5 + 1] = parseInt('10010000', 2);
+            memory[0xA * 5 + 2] = parseInt('11110000', 2);
+            memory[0xA * 5 + 3] = parseInt('10010000', 2);
+            memory[0xA * 5 + 4] = parseInt('10010000', 2);
+
+            memory[0xB * 5 + 0] = parseInt('11100000', 2);
+            memory[0xB * 5 + 1] = parseInt('10010000', 2);
+            memory[0xB * 5 + 2] = parseInt('11100000', 2);
+            memory[0xB * 5 + 3] = parseInt('10010000', 2);
+            memory[0xB * 5 + 4] = parseInt('11100000', 2);
+
+            memory[0xC * 5 + 0] = parseInt('11110000', 2);
+            memory[0xC * 5 + 1] = parseInt('10000000', 2);
+            memory[0xC * 5 + 2] = parseInt('10000000', 2);
+            memory[0xC * 5 + 3] = parseInt('10000000', 2);
+            memory[0xC * 5 + 4] = parseInt('11110000', 2);
+
+            memory[0xD * 5 + 0] = parseInt('11100000', 2);
+            memory[0xD * 5 + 1] = parseInt('10010000', 2);
+            memory[0xD * 5 + 2] = parseInt('10010000', 2);
+            memory[0xD * 5 + 3] = parseInt('10010000', 2);
+            memory[0xD * 5 + 4] = parseInt('11100000', 2);
+
+            memory[0xE * 5 + 0] = parseInt('11110000', 2);
+            memory[0xE * 5 + 1] = parseInt('10000000', 2);
+            memory[0xE * 5 + 2] = parseInt('11110000', 2);
+            memory[0xE * 5 + 3] = parseInt('10000000', 2);
+            memory[0xE * 5 + 4] = parseInt('11110000', 2);
+
+            memory[0xF * 5 + 0] = parseInt('11110000', 2);
+            memory[0xF * 5 + 1] = parseInt('10000000', 2);
+            memory[0xF * 5 + 2] = parseInt('11110000', 2);
+            memory[0xF * 5 + 3] = parseInt('10000000', 2);
+            memory[0xF * 5 + 4] = parseInt('10000000', 2);
+
+            setInterval(function () {
+                if (delayTimer) {
+                    delayTimer --;
+                }
+            }, 1000/60);
+
+            setInterval(function () {
+                if (soundTimer) {
+                    soundTimer --;
+                }
+            }, 1000/60);
+        };
 
         function render() {
             self.renderer.render(screen);
@@ -275,122 +391,6 @@ var chipate = {
                 setTimeout(loop, 0);
             }
         }
-
-        (function initialization() {
-            memory[0x0 * 5 + 0] = parseInt('11110000', 2);
-            memory[0x0 * 5 + 1] = parseInt('10010000', 2);
-            memory[0x0 * 5 + 2] = parseInt('10010000', 2);
-            memory[0x0 * 5 + 3] = parseInt('10010000', 2);
-            memory[0x0 * 5 + 4] = parseInt('11110000', 2);
-
-            memory[0x1 * 5 + 0] = parseInt('00110000', 2);
-            memory[0x1 * 5 + 1] = parseInt('00010000', 2);
-            memory[0x1 * 5 + 2] = parseInt('00010000', 2);
-            memory[0x1 * 5 + 3] = parseInt('00010000', 2);
-            memory[0x1 * 5 + 4] = parseInt('00010000', 2);
-
-            memory[0x2 * 5 + 0] = parseInt('11110000', 2);
-            memory[0x2 * 5 + 1] = parseInt('00010000', 2);
-            memory[0x2 * 5 + 2] = parseInt('11110000', 2);
-            memory[0x2 * 5 + 3] = parseInt('10000000', 2);
-            memory[0x2 * 5 + 4] = parseInt('11110000', 2);
-
-            memory[0x3 * 5 + 0] = parseInt('11110000', 2);
-            memory[0x3 * 5 + 1] = parseInt('00010000', 2);
-            memory[0x3 * 5 + 2] = parseInt('11110000', 2);
-            memory[0x3 * 5 + 3] = parseInt('00010000', 2);
-            memory[0x3 * 5 + 4] = parseInt('11110000', 2);
-
-            memory[0x4 * 5 + 0] = parseInt('10010000', 2);
-            memory[0x4 * 5 + 1] = parseInt('10010000', 2);
-            memory[0x4 * 5 + 2] = parseInt('11110000', 2);
-            memory[0x4 * 5 + 3] = parseInt('00010000', 2);
-            memory[0x4 * 5 + 4] = parseInt('00010000', 2);
-
-            memory[0x5 * 5 + 0] = parseInt('11110000', 2);
-            memory[0x5 * 5 + 1] = parseInt('10000000', 2);
-            memory[0x5 * 5 + 2] = parseInt('11110000', 2);
-            memory[0x5 * 5 + 3] = parseInt('00010000', 2);
-            memory[0x5 * 5 + 4] = parseInt('11110000', 2);
-
-            memory[0x6 * 5 + 0] = parseInt('11110000', 2);
-            memory[0x6 * 5 + 1] = parseInt('10000000', 2);
-            memory[0x6 * 5 + 2] = parseInt('11110000', 2);
-            memory[0x6 * 5 + 3] = parseInt('10010000', 2);
-            memory[0x6 * 5 + 4] = parseInt('11110000', 2);
-
-            memory[0x7 * 5 + 0] = parseInt('11110000', 2);
-            memory[0x7 * 5 + 1] = parseInt('00010000', 2);
-            memory[0x7 * 5 + 2] = parseInt('00010000', 2);
-            memory[0x7 * 5 + 3] = parseInt('00010000', 2);
-            memory[0x7 * 5 + 4] = parseInt('00010000', 2);
-
-            memory[0x8 * 5 + 0] = parseInt('11110000', 2);
-            memory[0x8 * 5 + 1] = parseInt('10010000', 2);
-            memory[0x8 * 5 + 2] = parseInt('11110000', 2);
-            memory[0x8 * 5 + 3] = parseInt('10010000', 2);
-            memory[0x8 * 5 + 4] = parseInt('11110000', 2);
-
-            memory[0x9 * 5 + 0] = parseInt('11110000', 2);
-            memory[0x9 * 5 + 1] = parseInt('10010000', 2);
-            memory[0x9 * 5 + 2] = parseInt('11110000', 2);
-            memory[0x9 * 5 + 3] = parseInt('00010000', 2);
-            memory[0x9 * 5 + 4] = parseInt('00010000', 2);
-
-            memory[0xA * 5 + 0] = parseInt('11110000', 2);
-            memory[0xA * 5 + 1] = parseInt('10010000', 2);
-            memory[0xA * 5 + 2] = parseInt('11110000', 2);
-            memory[0xA * 5 + 3] = parseInt('10010000', 2);
-            memory[0xA * 5 + 4] = parseInt('10010000', 2);
-
-            memory[0xB * 5 + 0] = parseInt('11100000', 2);
-            memory[0xB * 5 + 1] = parseInt('10010000', 2);
-            memory[0xB * 5 + 2] = parseInt('11100000', 2);
-            memory[0xB * 5 + 3] = parseInt('10010000', 2);
-            memory[0xB * 5 + 4] = parseInt('11100000', 2);
-
-            memory[0xC * 5 + 0] = parseInt('11110000', 2);
-            memory[0xC * 5 + 1] = parseInt('10000000', 2);
-            memory[0xC * 5 + 2] = parseInt('10000000', 2);
-            memory[0xC * 5 + 3] = parseInt('10000000', 2);
-            memory[0xC * 5 + 4] = parseInt('11110000', 2);
-
-            memory[0xD * 5 + 0] = parseInt('11100000', 2);
-            memory[0xD * 5 + 1] = parseInt('10010000', 2);
-            memory[0xD * 5 + 2] = parseInt('10010000', 2);
-            memory[0xD * 5 + 3] = parseInt('10010000', 2);
-            memory[0xD * 5 + 4] = parseInt('11100000', 2);
-
-            memory[0xE * 5 + 0] = parseInt('11110000', 2);
-            memory[0xE * 5 + 1] = parseInt('10000000', 2);
-            memory[0xE * 5 + 2] = parseInt('11110000', 2);
-            memory[0xE * 5 + 3] = parseInt('10000000', 2);
-            memory[0xE * 5 + 4] = parseInt('11110000', 2);
-
-            memory[0xF * 5 + 0] = parseInt('11110000', 2);
-            memory[0xF * 5 + 1] = parseInt('10000000', 2);
-            memory[0xF * 5 + 2] = parseInt('11110000', 2);
-            memory[0xF * 5 + 3] = parseInt('10000000', 2);
-            memory[0xF * 5 + 4] = parseInt('10000000', 2);
-
-            var xhr = new XMLHttpRequest();
-            var rom = '';
-            var byt;
-
-            xhr.overrideMimeType('text/plain; charset=x-user-defined');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-             ;      rom = xhr.responseText;
-                    for (i = 0; i < rom.length; i ++) {
-                        byt = rom.charCodeAt(i) & 0xFF;
-                        memory[0x200 + i] = byt;
-                    }
-                    loop();
-                }
-            };
-            xhr.open('GET', 'roms/MAZE');
-            xhr.send();
-        })();
     },
     'CanvasRenderer': function CanvasRenderer(canvasElement) {
         var context = canvasElement.getContext('2d');
@@ -452,9 +452,36 @@ var chipate = {
         }
             
     },
+    'ajaxRom': function ajaxRom(path, callback) {
+        var xhr       = new XMLHttpRequest(),
+            romBuffer = new ArrayBuffer(0xE00),
+            rom       = new Uint8Array(romBuffer);
+
+        xhr.overrideMimeType('text/plain; charset=x-user-defined');
+        xhr.onreadystatechange = function () {
+            var text,
+                i,
+                byt;
+
+            if (xhr.readyState == 4) {
+                text = xhr.responseText;
+
+                for (i = 0; i < text.length; i ++) {
+                    byt = text.charCodeAt(i) & 0xFF;
+                    rom[i] = byt;
+                }
+
+                callback(rom);
+            }
+        };
+        xhr.open('GET', path);
+        xhr.send();
+    },
     'quickSetup': function (canvasElement) {
         var renderer = new chipate.CanvasRenderer(canvasElement),
             input    = new chipate.KeyboardInput(),
             emulator = new chipate.Emulator({'renderer': renderer, 'input': input});
+
+        return emulator;
     }
 };
