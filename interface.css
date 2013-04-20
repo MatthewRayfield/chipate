@@ -22,6 +22,11 @@ body {
 #toolbar h1 sup {
     font: 10px Arial;
 }
+#status-line {
+    font: 15px Arial;
+    vertical-align: middle;
+    margin: 0 10px;
+}
 #canvas {
     background: white;
     border: 10px solid #cccccc;
