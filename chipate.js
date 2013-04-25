@@ -16,6 +16,7 @@ var chipate = {
 
         self.renderer = setupProperties['renderer'] || {'render': function () {}};
         self.input    = setupProperties['input']    || {'currentKey': -1};
+        self.debugger = setupProperties['debugger'];
 
         self.loadRom = function loadRom(rom) {
             var i,
@@ -171,7 +172,22 @@ var chipate = {
                 nn  = word & 0xFF,
                 n   = word & 0xF;
 
-            //console.log('pc:' + pc + 'opcode:' + opcode.toString(16));
+            if (self.debugger) {
+                self.debugger.update({
+                    'emulator':   self,
+                    'memory':     memory,
+                    'registers':  registers,
+                    'i':          i,
+                    'pc':         pc,
+                    'stack':      stack,
+                    'delayTimer': delayTimer,
+                    'soundTimer': soundTimer,
+                });
+
+                if (!running) {
+                    return;
+                }
+            }
 
             pc += 2;
 
@@ -393,6 +409,49 @@ var chipate = {
                 setTimeout(loop, 0);
             }
         }
+    },
+    'VisualDebugger': function VisualDebugger(element) {
+        var self = this,
+            pcDisplay = document.createElement('div'),
+            lineElements,
+            lastLine;
+
+        //element.appendChild(pcDisplay);
+
+        self.update = function update(data) {
+            var disassembled,
+                currentLine;
+
+            if (!lineElements) {
+                lineElements = [];
+                disassembled = chipate.disassemble(data.memory);
+                disassembled.forEach(function (line) {
+                    var lineElement = document.createElement('div');
+
+                    lineElement.className = 'line';
+
+                    lineElement.innerHTML = line[0];
+                    if (line[1]) {
+                        lineElement.innerHTML += ' ' + line[1] + ' ' + line[2].join(' ');
+                    }
+
+                    element.appendChild(lineElement);
+                    lineElements[line[0]] = lineElement;
+                });
+            }
+
+            currentLine = lineElements[data.pc];
+            if (currentLine) {
+                if (lastLine) {
+                    lastLine.style.background = 'none';
+                }
+                currentLine.style.background = 'red';
+                lastLine = currentLine;
+            }
+
+            //pcDisplay.innerHTML = 'pc: ' + data.pc;
+            //data.emulator.stop();
+        };
     },
     'CanvasRenderer': function CanvasRenderer(canvasElement) {
         var context = canvasElement.getContext('2d');
@@ -617,7 +676,7 @@ var chipate = {
             }
 
             if (command) {
-                lines.push([i, command].concat(args));
+                lines.push([i, command, args]);
             }
             else {
                 lines.push([i, null]);

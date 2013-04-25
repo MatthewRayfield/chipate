@@ -31,4 +31,14 @@ body {
     background: white;
     border: 10px solid #cccccc;
     box-shadow: 0 5px 20px 0;
+    float: left;
+}
+#debugger-box {
+    float: right;
+    font: 15px monospace;
+    height: 400px;
+    background: white;
+    text-align: left;
+    padding: 0 10px;
+    overflow: scroll;
 }

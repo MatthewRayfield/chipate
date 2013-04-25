@@ -5,7 +5,11 @@ window.onload = function () {
         stopButton  = document.getElementById('stop-button'),
         canvas      = document.getElementById('canvas'),
         statusLine  = document.getElementById('status-line'),
-        emulator = chipate.quickSetup(canvas);
+        debuggerBox = document.getElementById('debugger-box'),
+        emulator = chipate.quickSetup(canvas),
+        vdebugger = new chipate.VisualDebugger(debuggerBox);
+
+    emulator.debugger = vdebugger;
 
     loadButton.addEventListener('click', function () {
         var path = 'roms/' + romSelector.value;
