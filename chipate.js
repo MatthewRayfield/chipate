@@ -199,7 +199,9 @@ var chipate = {
                             clear();
                             break;
                         case 0xEE:
-                            pc = stack.pop();
+                            if (stack.length) {
+                                pc = stack.pop();
+                            }
                             break;
                     }
                     break;
@@ -208,22 +210,15 @@ var chipate = {
                     break;
                 case 0x2:
                     stack.push(pc);
-                    px = nnn;
+                    pc = nnn;
                     break;
                 case 0x3:
                     if (registers[x] === nn) {
-                        if (x === 0xF) {
-                            console.log('OKAY');
-                            console.log(pc);
-                        }
                         pc += 2;
                     }
                     break;
                 case 0x4:
                     if (registers[x] !== nn) {
-                        if (x === 0xF) {
-                            console.log('OKAY2');
-                        }
                         pc += 2;
                     }
                     break;
@@ -329,6 +324,7 @@ var chipate = {
                                     screen[pos] = 0;
                                 }
                                 else {
+                                    registers[0xF] = 0;
                                     screen[pos] = 1;
                                 }
                             }
@@ -392,13 +388,13 @@ var chipate = {
                             break;
                         case 0x55:
                             var ii;
-                            for (ii = 0; ii < registers[x]; ii ++) {
+                            for (ii = 0; ii <= x; ii ++) {
                                 memory[i + ii] = registers[ii];
                             }
                             break;
                         case 0x65:
                             var ii;
-                            for (ii = 0; ii < registers[x]; ii ++) {
+                            for (ii = 0; ii <= x; ii ++) {
                                  registers[ii] = memory[i + ii];
                             }
                             break;
