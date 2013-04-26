@@ -32,10 +32,14 @@
                 <button id='load-button'>Load</button>
                 <button id='start-button'>Start</button>
                 <button id='stop-button'>Stop</button>
+                <label for='debugger-checkbox'>debugger:</label>
+                <input type='checkbox' id='debugger-checkbox' />
                 <span id='status-line'>No ROM Loaded</span>
             </div>
-            <canvas id='canvas' width='640' height='320'></canvas>
-            <div id='debugger-box'></div>
+            <div id='bottom'>
+                <canvas id='canvas' width='640' height='320'></canvas>
+                <div id='debugger-box'></div>
+            </div>
         </div>
     </body>
 </html>

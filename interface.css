@@ -11,6 +11,7 @@ body {
     padding: 5px;
     background: #cccccc;
     margin: 0 20px;
+    font: 13px Arial;
 }
 #toolbar h1 {
     margin: 0;
@@ -23,22 +24,26 @@ body {
     font: 10px Arial;
 }
 #status-line {
-    font: 15px Arial;
+    font-size: 15px;
     vertical-align: middle;
     margin: 0 10px;
 }
+
+#bottom {
+    border: 10px solid #cccccc;
+    box-shadow: 0 5px 20px 0;
+    font-size: 0;
+}
+
 #canvas {
     background: white;
-    border: 10px solid #cccccc;
-    /*box-shadow: 0 5px 20px 0;*/
-    float: left;
 }
+
 #debugger-box {
-    float: right;
+    display: none;
     font: 15px monospace;
     text-align: left;
-    border: 10px solid #cccccc;
-    border-left: none;
+    border-left: 10px solid #cccccc;
 }
 
 #debugger-box #line-display {

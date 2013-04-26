@@ -6,10 +6,9 @@ window.onload = function () {
         canvas      = document.getElementById('canvas'),
         statusLine  = document.getElementById('status-line'),
         debuggerBox = document.getElementById('debugger-box'),
+        debuggerCheckbox = document.getElementById('debugger-checkbox'),
         emulator = chipate.quickSetup(canvas),
         vdebugger = new chipate.VisualDebugger(debuggerBox);
-
-    emulator.debugger = vdebugger;
 
     loadButton.addEventListener('click', function () {
         var path = 'roms/' + romSelector.value;
@@ -30,5 +29,16 @@ window.onload = function () {
     stopButton.addEventListener('click', function () {
         emulator.stop();
         statusLine.innerHTML = 'Stopped';
+    });
+
+    debuggerCheckbox.addEventListener('change', function () {
+        if (debuggerCheckbox.checked) {
+            debuggerBox.style.display = 'inline-block';
+            emulator.debugger = vdebugger;
+        }
+        else {
+            debuggerBox.style.display = 'none';
+            emulator.debugger = null;
+        }
     });
 };
