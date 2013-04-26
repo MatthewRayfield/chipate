@@ -30,6 +30,7 @@ var chipate = {
         }
 
         self.start = function start() {
+            console.log('start');
             running = true;
             loop();
         };
@@ -412,30 +413,67 @@ var chipate = {
     },
     'VisualDebugger': function VisualDebugger(element) {
         var self = this,
-            pcDisplay = document.createElement('div'),
+            sideBox          = document.createElement('div'),
+            internalsDisplay = document.createElement('pre'),
+            lineDisplay      = document.createElement('div'),
+            toggleBox1       = document.createElement('div'),
+            stepCheckbox     = document.createElement('input'),
+            stepLabel        = document.createElement('label'),
+            toggleBox2       = document.createElement('div'),
+            followCheckbox   = document.createElement('input'),
+            followLabel      = document.createElement('label'),
             lineElements,
-            lastLine;
+            lastLine,
+            lastPc;
 
-        //element.appendChild(pcDisplay);
+        sideBox.id          = 'side-box';
+        internalsDisplay.id = 'internals-display';
+        lineDisplay.id      = 'line-display';
+
+        stepCheckbox.type   = 'checkbox';
+        stepLabel.innerHTML   = 'step';
+
+        followCheckbox.type = 'checkbox';
+        followCheckbox.checked = 'true';
+        followLabel.innerHTML = 'follow';
+
+        element.appendChild(lineDisplay);
+
+        toggleBox1.appendChild(stepCheckbox);
+        toggleBox1.appendChild(stepLabel);
+        sideBox.appendChild(toggleBox1);
+
+        toggleBox2.appendChild(followCheckbox);
+        toggleBox2.appendChild(followLabel);
+        sideBox.appendChild(toggleBox2);
+
+        sideBox.appendChild(internalsDisplay);
+
+        element.appendChild(sideBox);
 
         self.update = function update(data) {
             var disassembled,
-                currentLine;
+                currentLine,
+                offsetTop;
 
             if (!lineElements) {
                 lineElements = [];
                 disassembled = chipate.disassemble(data.memory);
-                disassembled.forEach(function (line) {
+                disassembled.forEach(function (line, index) {
                     var lineElement = document.createElement('div');
 
                     lineElement.className = 'line';
+
+                    if (index % 2) {
+                        lineElement.className += ' odd';
+                    }
 
                     lineElement.innerHTML = line[0];
                     if (line[1]) {
                         lineElement.innerHTML += ' ' + line[1] + ' ' + line[2].join(' ');
                     }
 
-                    element.appendChild(lineElement);
+                    lineDisplay.appendChild(lineElement);
                     lineElements[line[0]] = lineElement;
                 });
             }
@@ -443,14 +481,48 @@ var chipate = {
             currentLine = lineElements[data.pc];
             if (currentLine) {
                 if (lastLine) {
-                    lastLine.style.background = 'none';
+                    lastLine.className = lastLine.className.replace(' current', '');
                 }
-                currentLine.style.background = 'red';
+                currentLine.className += ' current';
+
+                if (followCheckbox.checked) {
+                    offsetTop = currentLine.offsetTop - lineDisplay.offsetTop;
+                    if (lineDisplay.scrollTop + lineDisplay.offsetHeight < offsetTop || lineDisplay.scrollTop > offsetTop) {
+                        lineDisplay.scrollTop = offsetTop;
+                    }
+                }
+
                 lastLine = currentLine;
             }
 
-            //pcDisplay.innerHTML = 'pc: ' + data.pc;
-            //data.emulator.stop();
+            internalsDisplay.innerHTML  = 'pc: ' + data.pc + '\n';
+            internalsDisplay.innerHTML += 'v0: ' + data.registers[0] + '\n';
+            internalsDisplay.innerHTML += 'v1: ' + data.registers[1] + '\n';
+            internalsDisplay.innerHTML += 'v2: ' + data.registers[2] + '\n';
+            internalsDisplay.innerHTML += 'v3: ' + data.registers[3] + '\n';
+            internalsDisplay.innerHTML += 'v4: ' + data.registers[4] + '\n';
+            internalsDisplay.innerHTML += 'v5: ' + data.registers[5] + '\n';
+            internalsDisplay.innerHTML += 'v6: ' + data.registers[6] + '\n';
+            internalsDisplay.innerHTML += 'v7: ' + data.registers[7] + '\n';
+            internalsDisplay.innerHTML += 'v8: ' + data.registers[8] + '\n';
+            internalsDisplay.innerHTML += 'v9: ' + data.registers[9] + '\n';
+            internalsDisplay.innerHTML += 'va: ' + data.registers[10] + '\n';
+            internalsDisplay.innerHTML += 'vb: ' + data.registers[11] + '\n';
+            internalsDisplay.innerHTML += 'vc: ' + data.registers[12] + '\n';
+            internalsDisplay.innerHTML += 'vd: ' + data.registers[13] + '\n';
+            internalsDisplay.innerHTML += 've: ' + data.registers[14] + '\n';
+            internalsDisplay.innerHTML += 'vf: ' + data.registers[15] + '\n';
+            internalsDisplay.innerHTML += ' i: ' + data.i + '\n';
+            internalsDisplay.innerHTML += 'dt: ' + data.delayTimer + '\n';
+            internalsDisplay.innerHTML += 'st: ' + data.soundTimer + '\n';
+            // todo: add stack display
+
+            if (stepCheckbox.checked) {
+                if (lastPc !== data.pc) {
+                    data.emulator.stop();
+                    lastPc = data.pc;
+                }
+            }
         };
     },
     'CanvasRenderer': function CanvasRenderer(canvasElement) {
@@ -527,7 +599,7 @@ var chipate = {
             args,
             lines = [];
 
-        for (i = 0; i < length; i += 2) {
+        for (i = 0; i < length; i ++) {
             word = memory[i] << 0x8 | memory[i+1],
             opcode = word >> 0xc,
             x = (word & 0x0F00) >> 0x8,

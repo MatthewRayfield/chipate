@@ -30,15 +30,42 @@ body {
 #canvas {
     background: white;
     border: 10px solid #cccccc;
-    box-shadow: 0 5px 20px 0;
+    /*box-shadow: 0 5px 20px 0;*/
     float: left;
 }
 #debugger-box {
     float: right;
     font: 15px monospace;
-    height: 400px;
-    background: white;
     text-align: left;
-    padding: 0 10px;
+    border: 10px solid #cccccc;
+    border-left: none;
+}
+
+#debugger-box #line-display {
+    float: left;
     overflow: scroll;
+    height: 320px;
+    background: white;
+}
+
+#debugger-box #side-box {
+    float: left;
+}
+
+#debugger-box #side-box #internals-display {
+    font-size: 12px;
+    padding: 0 10px;
+    margin: 0;
+}
+
+#debugger-box .line {
+    padding: 0 10px;
+}
+
+#debugger-box .line.odd {
+    background: #dddddd;
+}
+
+#debugger-box .line.current {
+    background: #ffff00;
 }
