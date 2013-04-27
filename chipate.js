@@ -195,59 +195,59 @@ var chipate = {
             switch (opcode) {
                 case 0x0:
                     switch (nn) {
-                        case 0xE0:
+                        case 0xE0: // clr
                             clear();
                             break;
-                        case 0xEE:
+                        case 0xEE: // ret
                             if (stack.length) {
                                 pc = stack.pop();
                             }
                             break;
                     }
                     break;
-                case 0x1:
+                case 0x1: // jmp
                     pc = nnn;
                     break;
-                case 0x2:
+                case 0x2: // srt
                     stack.push(pc);
                     pc = nnn;
                     break;
-                case 0x3:
+                case 0x3: // sie
                     if (registers[x] === nn) {
                         pc += 2;
                     }
                     break;
-                case 0x4:
+                case 0x4: // sne
                     if (registers[x] !== nn) {
                         pc += 2;
                     }
                     break;
-                case 0x5:
+                case 0x5: // sre
                     if (registers[x] === registers[y]) {
                         pc += 2;
                     }
                     break;
-                case 0x6:
+                case 0x6: // set
                     registers[x] = nn;
                     break;
-                case 0x7:
+                case 0x7: // add
                     registers[x] += nn;
                     break;
                 case 0x8:
                     switch (n) {
-                        case 0x0:
+                        case 0x0: // str
                             registers[x] = registers[y];
                             break;
-                        case 0x1:
+                        case 0x1: // ror
                             registers[x] = registers[x] | registers[y];
                             break;
-                        case 0x2:
+                        case 0x2: // and
                             registers[x] = registers[x] & registers[y];
                             break;
-                        case 0x3:
+                        case 0x3: // xor
                             registers[x] = registers[x] ^ registers[y];
                             break;
-                        case 0x4:
+                        case 0x4: // adr
                             var result = registers[x] + registers[y];
                             if (result > 0xFF) {
                                 registers[0xF] = 1;
@@ -257,7 +257,7 @@ var chipate = {
                             }
                             registers[x] = result;
                             break;
-                        case 0x5:
+                        case 0x5: // sbr
                             var result = registers[x] - registers[y];
                             if (result < 0x0) {
                                 registers[0xF] = 1;
@@ -267,11 +267,11 @@ var chipate = {
                             }
                             registers[x] = result;
                             break;
-                        case 0x6:
+                        case 0x6: // shr
                             registers[0xF] = registers[x] & 0x1;
                             registers[x] = registers[x] >> 1;
                             break;
-                        case 0x7:
+                        case 0x7: // sbf
                             var result = registers[y] - registers[x];
                             if (result < 0x0) {
                                 registers[0xF] = 1;
@@ -281,27 +281,27 @@ var chipate = {
                             }
                             registers[x] = result;
                             break;
-                        case 0xE:
+                        case 0xE: // shl
                             registers[0xF] = (registers[x] >> 7) & 0x1;
                             registers[x] = registers[x] << 1;
                             break;
                     }
                     break;
-                case 0x9:
+                case 0x9: // snr
                     if (registers[x] !== registers[y]) {
                         pc += 2;
                     }
                     break;
-                case 0xA:
+                case 0xA: // sti
                     i = nnn;
                     break;
-                case 0xB:
+                case 0xB: // jpp
                     pc = nnn + registers[0];
                     break;
-                case 0xC:
+                case 0xC: // rnd
                     registers[x] = Math.floor(Math.random() * 256) & nn;
                     break;
-                case 0xD:
+                case 0xD: // drw
                     var screenX = registers[x];
                     var screenY = registers[y];
                     var maxScreenX = screenX + 8;
@@ -337,12 +337,12 @@ var chipate = {
                     break;
                 case 0xE:
                     switch (nn) {
-                        case 0x9E:
+                        case 0x9E: // sip
                             if (registers[x] === self.input.currentKey) {
                                 pc += 2;
                             }
                             break;
-                        case 0xA1:
+                        case 0xA1: // snp
                             if (registers[x] !== self.input.currentKey) {
                                 pc += 2;
                             }
@@ -352,10 +352,10 @@ var chipate = {
                     break;
                 case 0xF:
                     switch (nn) {
-                        case 0x07:
+                        case 0x07: // stm
                             registers[x] = delayTimer;
                             break;
-                        case 0x0A:
+                        case 0x0A: // wfk
                             console.log('waiting for input');
                             self.input.onKeyDown = function () {
                                 self.input.onKeyDown = null;
@@ -366,19 +366,19 @@ var chipate = {
                             };
                             running = false;
                             break;
-                        case 0x15:
+                        case 0x15: // sdt
                             delayTimer = registers[x];
                             break;
-                        case 0x18:
+                        case 0x18: // sst
                             soundTimer = registers[x];
                             break;
-                        case 0x1E:
+                        case 0x1E: // adi
                             i += registers[x];
                             break;
-                        case 0x29:
+                        case 0x29: // sts
                             i = registers[x] * 5;
                             break;
-                        case 0x33:
+                        case 0x33: // sbd
                             var temp = registers[x];
                             memory[i] = Math.floor(temp / 100);
                             temp -= memory[i] * 100;
@@ -386,13 +386,13 @@ var chipate = {
                             temp -= memory[i] * 10;
                             memory[i+2] = temp;
                             break;
-                        case 0x55:
+                        case 0x55: // srm
                             var ii;
                             for (ii = 0; ii <= x; ii ++) {
                                 memory[i + ii] = registers[ii];
                             }
                             break;
-                        case 0x65:
+                        case 0x65: // lrm
                             var ii;
                             for (ii = 0; ii <= x; ii ++) {
                                  registers[ii] = memory[i + ii];
