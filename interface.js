@@ -7,8 +7,10 @@ window.onload = function () {
         statusLine  = document.getElementById('status-line'),
         debuggerBox = document.getElementById('debugger-box'),
         debuggerCheckbox = document.getElementById('debugger-checkbox'),
+        cpsBox = document.getElementById('cps'),
         emulator = chipate.quickSetup(canvas),
-        vdebugger = new chipate.VisualDebugger(debuggerBox);
+        vdebugger = new chipate.VisualDebugger(debuggerBox),
+        cyclesDisplay = new chipate.CyclesPerSecondDisplay(emulator, cpsBox);
 
     loadButton.addEventListener('click', function () {
         var path = 'roms/' + romSelector.value;

@@ -39,6 +39,10 @@ body {
     margin: 0 10px;
 }
 
+#cps {
+    font: 8px monospace;
+}
+
 #bottom {
     border: 10px solid #dddddd;
     border-radius: 5px;

@@ -17,6 +17,7 @@ var chipate = {
         self.renderer = setupProperties['renderer'] || {'render': function () {}};
         self.input    = setupProperties['input']    || {'currentKey': -1};
         self.debugger = setupProperties['debugger'];
+        self.cycles = 0;
 
         self.loadRom = function loadRom(rom) {
             var i,
@@ -405,6 +406,8 @@ var chipate = {
             if (running) {
                 setTimeout(loop, 0);
             }
+            
+            self.cycles ++;
         }
     },
     'VisualDebugger': function VisualDebugger(element) {
@@ -580,6 +583,20 @@ var chipate = {
             self.currentKey = -1;
         }
             
+    },
+    'CyclesPerSecondDisplay': function CyclesPerSecondDisplay(emulator, element) {
+        function display() {
+            if (emulator.cycles) {
+                element.innerHTML = emulator.cycles;
+            }
+            else {
+                element.innerHTML = '';
+            }
+            emulator.cycles = 0;
+            setTimeout(display, 1000);
+        }
+
+        display();
     },
     'disassemble': function disassemble(memory) {
         var length = memory.length,
