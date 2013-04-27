@@ -1,18 +1,26 @@
 body {
-    background: #dddddd;
+    background: #555555;
     text-align: center;
     margin: 20;
 }
+
 #interface-box {
     display: inline-block;
 }
+
 #toolbar {
     text-align: left;
-    padding: 5px;
-    background: #cccccc;
+    padding: 0 3px 4px 3px;
+    background: #eeeeee;
+    box-shadow: 0 5px 20px 0;
+    /*border: 3px solid #1155bb;
+    border-bottom: none;*/
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     margin: 0 20px;
     font: 13px Arial;
 }
+
 #toolbar h1 {
     margin: 0;
     font: 15px Arial;
@@ -20,9 +28,11 @@ body {
     vertical-align: middle;
     margin: 0 10px;
 }
+
 #toolbar h1 sup {
     font: 10px Arial;
 }
+
 #status-line {
     font-size: 15px;
     vertical-align: middle;
@@ -30,26 +40,29 @@ body {
 }
 
 #bottom {
-    border: 10px solid #cccccc;
+    border: 10px solid #dddddd;
+    border-radius: 5px;
     box-shadow: 0 5px 20px 0;
     font-size: 0;
 }
 
 #canvas {
     background: white;
+    border: 1px solid #bbbbbb;
 }
 
 #debugger-box {
     display: none;
     font: 15px monospace;
+    background: #dddddd;
     text-align: left;
-    border-left: 10px solid #cccccc;
+    border-left: 10px solid #dddddd;
 }
 
 #debugger-box #line-display {
     float: left;
     overflow: scroll;
-    height: 320px;
+    height: 322px;
     background: white;
 }
 
