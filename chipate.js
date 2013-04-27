@@ -260,10 +260,10 @@ var chipate = {
                         case 0x5: // sbr
                             var result = registers[x] - registers[y];
                             if (result < 0x0) {
-                                registers[0xF] = 1;
+                                registers[0xF] = 0;
                             }
                             else {
-                                registers[0xF] = 0;
+                                registers[0xF] = 1;
                             }
                             registers[x] = result;
                             break;
