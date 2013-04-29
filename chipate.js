@@ -1,18 +1,20 @@
 var chipate = {
     'Emulator': function Emulator(setupProperties) {
-        var self           = this,
-            memoryBuffer   = new ArrayBuffer(0xE00 + 0x200),
-            registerBuffer = new ArrayBuffer(0x10),
-            screenBuffer   = new ArrayBuffer(64*32),
-            memory         = new Uint8Array(memoryBuffer),
-            registers      = new Uint8Array(registerBuffer),
-            screen         = new Uint8Array(screenBuffer),
-            i              = 0,
-            pc             = 0x200,
-            stack          = [],
-            delayTimer = 0,
-            soundTimer = 0,
-            running = true;
+        var self = this,
+            memoryBuffer,
+            registerBuffer,
+            screenBuffer,
+            memory,
+            registers,
+            screen,
+            i,
+            pc,
+            stack,
+            delayTimer,
+            soundTimer,
+            delayIntervald,
+            soundIntervalId,
+            running;
 
         self.renderer = setupProperties['renderer'] || {'render': function () {}};
         self.input    = setupProperties['input']    || {'currentKey': -1};
@@ -23,11 +25,11 @@ var chipate = {
             var i,
                 length = rom.length;
 
+            self.initialize();
+
             for (i = 0; i < length; i ++) {
                 memory[0x200 + i] = rom[i];
             }
-
-            self.initialize();
         }
 
         self.start = function start() {
@@ -41,6 +43,19 @@ var chipate = {
         };
 
         self.initialize = function initialize() {
+            memoryBuffer   = new ArrayBuffer(0xE00 + 0x200);
+            registerBuffer = new ArrayBuffer(0x10);
+            screenBuffer   = new ArrayBuffer(64*32);
+            memory         = new Uint8Array(memoryBuffer);
+            registers      = new Uint8Array(registerBuffer);
+            screen         = new Uint8Array(screenBuffer);
+            i              = 0;
+            pc             = 0x200;
+            stack          = [];
+            delayTimer = 0;
+            soundTimer = 0;
+            running = false;
+
             memory[0x0 * 5 + 0] = parseInt('11110000', 2);
             memory[0x0 * 5 + 1] = parseInt('10010000', 2);
             memory[0x0 * 5 + 2] = parseInt('10010000', 2);
@@ -137,13 +152,19 @@ var chipate = {
             memory[0xF * 5 + 3] = parseInt('10000000', 2);
             memory[0xF * 5 + 4] = parseInt('10000000', 2);
 
-            setInterval(function () {
+            if (delayIntervald) {
+                clearInterval(delayIntervald);
+            }
+            delayIntervald = setInterval(function () {
                 if (delayTimer) {
                     delayTimer --;
                 }
             }, 1000/60);
 
-            setInterval(function () {
+            if (soundIntervalId) {
+                clearInterval(soundIntervalId);
+            }
+            soundIntervalId = setInterval(function () {
                 if (soundTimer) {
                     soundTimer --;
                 }
